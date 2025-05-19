@@ -51,7 +51,7 @@
     <li class="nav-item dropdown no-arrow">
         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
-            <img class="img-profile  rounded-circle" src="<?= $baseurl ?>assets/images/avatar.png">
+            <img class="img-profile img-fluid rounded-circle" src="<?= $baseurl ?>assets/images/avatar.png">
             <h6 class="shopHHH"> <br /><span class="AdminBtn">Admin</span></h6>
         </a>
         

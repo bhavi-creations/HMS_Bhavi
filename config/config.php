@@ -1,21 +1,17 @@
 <?php
-// Detect host
 $host = $_SERVER['HTTP_HOST'];
-$folder = '';
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://";
 
-// If running locally, include folder name
-if ($host === 'localhost') {
-    $folder = '/HMS_Bhavi';
-}
+// Detect if local
+$isLocal = ($host === 'localhost');
+$folder = $isLocal ? '/HMS_Bhavi' : '';
 
-// Base URL (used in HTML)
-$baseurl = "http://{$host}{$folder}/";
-
-// Base path (used in PHP includes)
+// Final base URL
+$baseurl = "{$protocol}{$host}{$folder}/";
 $basepath = $_SERVER['DOCUMENT_ROOT'] . $folder . "/";
 
-// DB credentials (DO NOT CHANGE)
-if ($host === 'localhost') {
+// DB credentials
+if ($isLocal) {
     $db_username = "root";
     $db_password = "";
     $db_name     = "hospital_db";
