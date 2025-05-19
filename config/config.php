@@ -5,7 +5,7 @@ $folder = '';
 
 // If running locally, include folder name
 if ($host === 'localhost') {
-    $folder = '/Hospital-management-system-own';
+    $folder = '/HMS_Bhavi';
 }
 
 // Base URL (used in HTML)
@@ -14,7 +14,7 @@ $baseurl = "http://{$host}{$folder}/";
 // Base path (used in PHP includes)
 $basepath = $_SERVER['DOCUMENT_ROOT'] . $folder . "/";
 
-// DB credentials (optional)
+// DB credentials (DO NOT CHANGE)
 if ($host === 'localhost') {
     $db_username = "root";
     $db_password = "";
@@ -25,7 +25,7 @@ if ($host === 'localhost') {
     $db_name     = "hospital_db";
 }
 
-// PDO connection (optional)
+// PDO connection
 try {
     $pdo = new PDO("mysql:host=localhost;dbname={$db_name}", $db_username, $db_password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

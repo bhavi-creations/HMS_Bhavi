@@ -67,20 +67,20 @@
                     <ul class="dropdown-menu" aria-labelledby="patientsDropdown">
                         <li>
  
-                            <a class="dropdown-item  " href="/Hospital-management-system-own/modules/patients/views/add_patients.php">
+                            <a class="dropdown-item  " href="/HMS_Bhavi/modules/patients/views/add_patients.php">
                             <i class="fa-solid fa-plus"></i> Add Patient
                             </a>
 
 
                         </li>
                         <li>
-                            <a class="dropdown-item  " href="/Hospital-management-system-own/modules/patients/views/causality.php"><i class="fa-solid fa-eye"></i> View causality</a>
+                            <a class="dropdown-item  " href="/HMS_Bhavi/modules/patients/views/causality.php"><i class="fa-solid fa-eye"></i> View causality</a>
                         </li>
                         <li>
-                            <a class="dropdown-item  " href="/Hospital-management-system-own/modules/patients/views/opd.php"><i class="fa-solid fa-eye"></i> View OPD</a>
+                            <a class="dropdown-item  " href="/HMS_Bhavi/modules/patients/views/opd.php"><i class="fa-solid fa-eye"></i> View OPD</a>
                         </li>
                         <li>
-                            <a class="dropdown-item  " href="/Hospital-management-system-own/modules/patients/views/ipd.php"><i class="fa-solid fa-eye"></i> View IPD</a>
+                            <a class="dropdown-item  " href="/HMS_Bhavi/modules/patients/views/ipd.php"><i class="fa-solid fa-eye"></i> View IPD</a>
                         </li>
                     </ul>
                 </li>
@@ -93,10 +93,10 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="patientsDropdown">
                         <li>
-                            <a class="dropdown-item   " href="/Hospital-management-system-own/modules/staff/views/add_doctor.php"><i class="fa-solid fa-plus"></i>  Add Doctor</a>
+                            <a class="dropdown-item   " href="/HMS_Bhavi/modules/staff/views/add_doctor.php"><i class="fa-solid fa-plus"></i>  Add Doctor</a>
                         </li>
                         <li>
-                            <a class="dropdown-item  " href="/Hospital-management-system-own/modules/staff/views/doctors_list.php"><i class="fa-solid fa-eye"></i> View Doctor</a>
+                            <a class="dropdown-item  " href="/HMS_Bhavi/modules/staff/views/doctors_list.php"><i class="fa-solid fa-eye"></i> View Doctor</a>
                         </li>
                          
                     </ul>
