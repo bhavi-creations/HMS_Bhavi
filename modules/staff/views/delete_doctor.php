@@ -1,5 +1,5 @@
 <?php
-include "../../../config/db.php"; // Include your database connection
+include "../../../config/config.php"; // Include your database connection
 header("Content-Type: application/json");
 
 // Check if the request method is POST

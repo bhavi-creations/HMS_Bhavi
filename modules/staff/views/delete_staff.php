@@ -1,5 +1,5 @@
 <?php
-include "../../../config/db.php";
+include "../../../config/config.php";
 
 // Validate the 'id' and 'type' parameters
 if (!isset($_GET['id']) || !is_numeric($_GET['id']) || !isset($_GET['type'])) {

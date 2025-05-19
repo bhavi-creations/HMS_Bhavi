@@ -7,7 +7,7 @@ ob_start(); // Start output buffering
     <?php
        include '../../../includes/sidebar.php';
        include "../../../includes/header.php";
-       include "../../../config/db.php";
+       include "../../../config/config.php";
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (isset($_POST['submit_doc_btn'])) {

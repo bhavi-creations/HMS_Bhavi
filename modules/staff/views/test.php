@@ -6,7 +6,7 @@ ob_start(); // Start output buffering
     <?php
     include "../../../includes/sidebar.php";
     include "../../../includes/header.php";
-    include "../../../config/db.php";
+    include "../../../config/config.php";
 
     // Fetch Doctors List
     $doctor_stmt = $pdo->prepare("SELECT * FROM doctors_list ORDER BY doctor_id ASC");

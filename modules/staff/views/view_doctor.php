@@ -6,7 +6,7 @@ ob_start(); // Start output buffering
     <?php
     include "../../../includes/sidebar.php";
     include "../../../includes/header.php";
-    include "../../../config/db.php";
+    include "../../../config/config.php";
 
 
     if (isset($_GET['id']) && !empty($_GET['id'])) {

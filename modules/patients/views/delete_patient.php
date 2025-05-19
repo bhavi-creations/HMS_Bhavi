@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-include "../../../config/db.php";
+include "../../../config/config.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true);
