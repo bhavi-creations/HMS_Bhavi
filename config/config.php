@@ -20,9 +20,9 @@ if ($host === 'localhost') {
     $db_password = "";
     $db_name     = "hospital_db";
 } else {
-    $db_username = "live_db_user";
-    $db_password = "secure_password";
-    $db_name     = "live_db_name";
+    $db_username = "bhavicreations";
+    $db_password = "d8Az75YlgmyBnVM";
+    $db_name     = "hospital_db";
 }
 
 // PDO connection (optional)
