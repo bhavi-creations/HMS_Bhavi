@@ -2,9 +2,8 @@
 ob_start();
 session_start();
 
-// Dynamically determine base path
-$rootPath = dirname(__DIR__); // Goes to C:\xampp\htdocs\HMS_Bhavi
-require_once $rootPath . '/config/config.php';
+// Include the config file
+require_once __DIR__ . '/../config/config.php';
 
 // Access control
 if (!isset($_SESSION['username'])) {
@@ -12,6 +11,7 @@ if (!isset($_SESSION['username'])) {
     exit();
 }
 ?>
+
 
 
 
