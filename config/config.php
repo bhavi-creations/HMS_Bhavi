@@ -1,3 +1,4 @@
+
 <?php
 // Detect the protocol
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https://" : "http://";
