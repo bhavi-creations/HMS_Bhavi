@@ -1,13 +1,10 @@
-<?php
-ob_start(); // Start output buffering
-?>
+<?php include "../../../includes/header.php"; ?>
 
 <div id="wrapper">
 
     <?php
     include '../../../includes/sidebar.php';
-    include "../../../includes/header.php";
-    include "../../../config/db.php";
+
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (isset($_POST['submit_doc_btn'])) {
@@ -159,11 +156,11 @@ ob_start(); // Start output buffering
         }
     }
 
-
-    ob_end_flush(); // Flush the output buffer
     ?>
 
     <div id="content-wrapper" class="d-flex flex-column bg-white">
+
+        <?php include '../../../includes/navbar.php'; ?>
         <div id="content">
             <h1 class="text-center"><strong> Add Doctor </strong></h1>
             <div class="container">

@@ -1,14 +1,10 @@
-<?php
-ob_start(); // Start output buffering  
-?>
+<?php include "../../../includes/header.php"; ?>
 
 <div id="wrapper">
+
     <?php
+    include '../../../includes/sidebar.php';
 
-
-    include "../../../includes/sidebar.php";
-    include "../../../includes/header.php";
-    include "../../../config/db.php";
 
     if (isset($_GET['id']) && !empty($_GET['id'])) {
         // $patient_id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
@@ -23,6 +19,8 @@ ob_start(); // Start output buffering
             if ($patient) {
     ?>
                 <div id="content-wrapper" class="d-flex flex-column bg-white">
+                    <?php include '../../../includes/navbar.php'; ?>
+
                     <div id="content">
                         <h1 class="text-center mb-5"><strong>Patient Details</strong></h1>
 
@@ -182,7 +180,7 @@ ob_start(); // Start output buffering
 
 
                         <div class="container-fluid my-2">
- 
+
                             <div class="card flex-grow-1 me-2 " style="border-radius: 10px;">
                                 <div class="card-header text-black  text-center">
                                     <h4> Billing Details</h4>
@@ -276,7 +274,3 @@ ob_start(); // Start output buffering
         window.print();
     }
 </script>
-
-<?php
-ob_end_flush(); // Flush the output buffer
-?>

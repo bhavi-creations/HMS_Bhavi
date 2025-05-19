@@ -9,7 +9,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title> HMS</title>
+        <title>HMS</title>
         <link href="img\Oncology logo.png" rel="icon">
 
         <!-- Custom fonts for this template-->
@@ -17,13 +17,13 @@
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
         <!-- Custom styles for this template-->
-        <link href="assets/css/sb-admin-2.min.css" rel="stylesheet">
-        <link href="assets/css/style.css" rel="stylesheet">
+        <!-- <link href="css/sb-admin-2.min.css" rel="stylesheet"> -->
+        <link href="../../assets/css/sb-admin-2.min.css" rel="stylesheet">
 
 
     </head>
 
-    <body class=" " style="background: #F4F5F9;">
+    <body class=" " style="background: #A9A8D4;">
 
         <div class="container">
 
@@ -37,7 +37,7 @@
                             <!-- Nested Row within Card Body -->
                             <div class="row">
                                 <div class="col-lg-6 d-none d-lg-block  ">
-                                    <img src="assets/images/register.jpg" alt="login image" class="img-fluid">
+                                    <img src="img/login.jpg" alt="login image" class="img-fluid">
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="p-5">
@@ -45,8 +45,9 @@
                                             <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                         </div>
 
+                                        <form class="user" action="../../config/login_handler.php" method="POST">
 
-                                        <form class="user" action="config/login_handler.php" method="POST">
+                                       
                                             <div class="form-group">
                                                 <input type="email" class="form-control form-control-user" id="email" name="email" required placeholder="Email Address">
 

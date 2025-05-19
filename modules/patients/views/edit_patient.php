@@ -1,12 +1,10 @@
-<?php
-ob_start(); // Start output buffering
-?>
+<?php include "../../../includes/header.php"; ?>
 
 <div id="wrapper">
+
     <?php
     include '../../../includes/sidebar.php';
-    include "../../../includes/header.php";
-    include "../../../config/db.php";
+   
 
     // Capture the referrer URL or fallback to dashboard
     $referrer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '../../../dashboard.php';
@@ -126,6 +124,9 @@ ob_start(); // Start output buffering
     ?>
 
     <div id="content-wrapper" class="d-flex flex-column bg-white">
+
+    <?php include '../../../includes/navbar.php'; ?>
+    
         <div id="content">
             <h1 class="text-center"><strong>Edit Patient</strong></h1>
             <div class="container">

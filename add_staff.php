@@ -91,7 +91,7 @@ ob_start(); // Start output buffering
             }
         }
     }
-    ob_end_flush(); // Flush the output buffer
+ 
     ?>
 
 

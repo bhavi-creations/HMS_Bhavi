@@ -1,20 +1,18 @@
-<?php
-ob_start(); // Start output buffering
-?>
+<?php include "../../../includes/header.php"; ?>
 
 <div id="wrapper">
+
     <?php
-    include "../../../includes/sidebar.php";
-    include "../../../includes/header.php";
-    include "../../../config/db.php";
+    include '../../../includes/sidebar.php';
 
     // Fetch Doctors List
     $doctor_stmt = $pdo->prepare("SELECT * FROM doctors_list ORDER BY doctor_id ASC");
     $doctor_stmt->execute();
     $doctors = $doctor_stmt->fetchAll(PDO::FETCH_ASSOC);
     ?>
-
     <div id="content-wrapper" class="d-flex flex-column bg-white">
+
+        <?php include '../../../includes/navbar.php'; ?>
         <div id="content">
             <h1 class="text-center mb-5"><strong>Doctor Details</strong></h1>
 
@@ -254,7 +252,4 @@ ob_start(); // Start output buffering
         });
     });
 </script>
-
-<?php
-ob_end_flush(); // Flush the output buffer
-?>
+ 

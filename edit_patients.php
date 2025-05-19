@@ -71,7 +71,7 @@ ob_start(); // Start output buffering
             }
         }
 
-        ob_end_flush(); // Flush the output buffer
+        
     ?>
 
     <div id="content-wrapper" class="d-flex flex-column bg-white">

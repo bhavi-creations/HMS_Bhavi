@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Check if passwords match
     if ($password !== $repeatPassword) {
-        header('Location: ../register.php?error=Passwords do not match');
+        header('Location: ../modules/auth/register.php?error=Passwords do not match');
         exit();
     }
 
@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
     $stmt->execute([$email]);
     if ($stmt->rowCount() > 0) {
-        header('Location: ../register.php?error=Email already exists');
+        header('Location: ../modules/auth/register.php?error=Email already exists');
         exit();
     }
 
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt = $pdo->prepare("SELECT * FROM users WHERE first_name = ?");
     $stmt->execute([$username]);
     if ($stmt->rowCount() > 0) {
-        header('Location: ../register.php?error=Username already exists');
+        header('Location: ../modules/auth/register.php?error=Username already exists');
         exit();
     }
 
@@ -35,10 +35,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $hashedPassword = md5($password);
     $stmt = $pdo->prepare("INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)");
     if ($stmt->execute([$username, $lastName, $email, $hashedPassword])) {
-        header('Location: ../login.php');
+        header('Location: ../modules/auth/login.php');
         exit();
     } else {
-        header('Location: ../register.php?error=Registration failed');
+        header('Location: ../modules/auth/register.php?error=Registration failed');
         exit();
     }
 }

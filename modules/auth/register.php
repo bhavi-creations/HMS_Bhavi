@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title> Vision Dental</title>
+    <title>HMS</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -19,12 +19,12 @@
 
     <!-- Custom styles for this template-->
     <link href="assets/css/sb-admin-2.min.css" rel="stylesheet">
-        <link href="assets/css/style.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
 
 
-    </head>
+</head>
 
-    <body class=" " style="background: #F4F5F9;">
+<body class=" " style="background: #F4F5F9;">
 
     <div class="container">
 
@@ -32,20 +32,21 @@
             <div class="card-body p-0">
                 <!-- Nested Row within Card Body -->
                 <div class="row">
-                <div class="col-lg-6 d-none d-lg-block  ">
-                                <img src="assets/images/register.jpg" alt="login image" class="img-fluid">
-                            </div>
+                    <div class="col-lg-6 d-none d-lg-block  ">
+                        <img src="assets/images/register.jpg" alt="login image" class="img-fluid">
+                    </div>
                     <div class="col-lg-6">
                         <div class="p-5">
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                             </div>
- 
 
 
 
+                            <form class="user" action="../../config/register_handler.php" method="POST">
 
-                            <form class="user" action="config/register_handler.php" method="POST">
+
+
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="text" class="form-control form-control-user" id="username" name="username" required placeholder="User Name">
@@ -69,15 +70,15 @@
                                 <hr>
                             </form>
 
-                          
+
                             <div class="text-center">
                                 <a class="small" href="login.php">Already have an account? Login!</a>
-                            </div> 
+                            </div>
                             <?php
-                                            if (isset($_GET['error'])) {
-                                                echo "<p style='color:red;'>".htmlspecialchars($_GET['error'])."</p>";
-                                            }
-                                        ?>
+                            if (isset($_GET['error'])) {
+                                echo "<p style='color:red;'>" . htmlspecialchars($_GET['error']) . "</p>";
+                            }
+                            ?>
 
                         </div>
                     </div>

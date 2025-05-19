@@ -19,11 +19,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($user) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['first_name'];
-        header('Location: ../index.php');
+        header('Location: ../public/index.php');
        exit();
     } else {
         echo "error2";
-      header('Location: ../login.php?error=Invalid email or password');
+      header('Location: ../modules/auth/login.php?error=Invalid email or password');
       exit();
     }
 }

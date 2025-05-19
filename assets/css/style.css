@@ -331,7 +331,7 @@ p.p_tag:hover {
   /* Takes up available space */
   overflow-y: auto !important;
   /* Enables vertical scrolling */
-  height: 85vh !important;
+  /* height: 85vh !important; */
   /* Sets the height for scrolling */
   padding: 20px !important;
   /* Adds padding for aesthetics */

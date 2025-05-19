@@ -1,5 +1,17 @@
 <?php
-ob_start(); // Start output buffering
+ob_start();
+session_start();
+
+// Dynamically determine base path
+$rootPath = dirname(__DIR__); // This goes one level up from /includes/
+require_once $rootPath . '../config/config.php';
+
+
+// Access control
+if (!isset($_SESSION['username'])) {
+    header("Location: {$baseurl}modules/auth/login.php");
+    exit();
+}
 ?>
 
 
@@ -25,89 +37,13 @@ ob_start(); // Start output buffering
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="/Hospital-management-system-own/assets/css/sb-admin-2.min.css" rel="stylesheet">
-    <link href="/Hospital-management-system-own/assets/css/style.css" rel="stylesheet">
+    <link href="<?= $baseurl ?>/assets/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="<?= $baseurl ?>/assets/css/style.css" rel="stylesheet">
+    <link href="<?= $baseurl ?>/assets/css/sidebar.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
-     
+
 </head>
 
 <body>
-
-    <!-- <body data-layout="horizontal" data-topbar="light"> -->
-
-    <!-- Begin page -->
-    <div id="layout-wrapper" >
-
-
-        <header id="page-topbar">
-            <div class="navbar-header">
-
-
-       <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow ">
-                    
-
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
-
-                    <!-- Topbar Search -->
-                    <!-- <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <button class="btn btn-primary searchBtn" type="button">
-                                <i class="fas fa-search fa-sm"></i>
-                            </button>
-                            <input type="text" class="form-control searchhh bg-light border-0 small searchBar" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                            </div>
-                        </div>
-                    </form> -->
-
-                    <!-- Topbar Navbar -->
-                    <ul class="navbar-nav ml-auto">
-
-
-                        <li class="nav-item dropdown no-arrow d-sm-none">
-                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-search fa-fw"></i>
-                            </a>
-
-                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
-                                <form class="form-inline mr-auto w-100 navbar-search">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button">
-                                                <i class="fas fa-search fa-sm"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </li>
-
-
-
-                        <div class="topbar-divider d-none d-sm-block"></div>
-
-                        <!-- <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-
-                                <img class="img-profile rounded-circle" src="assets/images/avatar.png">
-                                <h6 class="shopHHH">Shop Owner<br /><span class="AdminBtn">Admin</span></h6>
-                            </a>
-                            
-                        </li> -->
-
-                    </ul>
-
-                </nav>
-
-
-
-
-
-            </div>
-        </header>

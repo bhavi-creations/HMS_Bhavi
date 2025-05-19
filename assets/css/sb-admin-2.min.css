@@ -4599,6 +4599,7 @@ input[type="submit"].btn-block {
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem 1rem;
+  
 }
 
 .navbar .container,
@@ -13233,4 +13234,23 @@ div#layout-wrapper {
 
 
 
+.topbar.static-top.shadow {
+  /* Targeting the specific navbar element */
+  position: fixed;
+  /* Make the element fixed relative to the viewport */
+  top: 0;
+  /* Stick it to the top of the viewport */
+  left: 0;
+  /* Align it to the left edge */
+  width: 100%;
  
+  z-index: -1000 ;
+  /* Ensure it stays on top of other content (adjust as needed) */
+  /* You might also want to add some background color or other styling here if needed */
+}
+
+/* Adjust the main content padding to prevent overlap */
+#content-wrapper {
+  padding-top: 268px;
+margin-top: 70px;
+}

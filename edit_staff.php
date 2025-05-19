@@ -1,7 +1,4 @@
-<?php
-ob_start(); // Start output buffering
-?>
-
+ 
 <div id="wrapper">
 
     <?php
@@ -84,7 +81,7 @@ ob_start(); // Start output buffering
             die("Error updating staff: " . $e->getMessage());
         }
     }
-    ob_end_flush(); // Flush the output buffer
+    
     ?>
 
 

@@ -442,3 +442,11 @@ $('.graph-feature').graphiq({
     height: 180
 })
  </script>
+
+
+
+
+
+<?php
+ob_end_flush();
+?>

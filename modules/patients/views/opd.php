@@ -1,32 +1,32 @@
- 
-
-
-<?php
-ob_start(); // Start output buffering
-?>
+<?php include "../../../includes/header.php"; ?>
 
 <div id="wrapper">
+
     <?php
-    include "../../../includes/sidebar.php";
-    include "../../../includes/header.php";
-    include "../../../config/db.php";
+    include '../../../includes/sidebar.php';
 
     // Fetch OPD Patients
     $opd_stmt = $pdo->prepare("SELECT * FROM patients_opd WHERE admission_type = 'OPD'");
     $opd_stmt->execute();
     $opd_patients = $opd_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Fetch all IPD patient IDs for quick checking
+    $ipd_ids_stmt = $pdo->prepare("SELECT opd_casualty_id FROM patients_ipd");
+    $ipd_ids_stmt->execute();
+    $admitted_ipd_patient_ids = $ipd_ids_stmt->fetchAll(PDO::FETCH_COLUMN);
     ?>
 
     <div id="content-wrapper" class="d-flex flex-column bg-white">
+
+        <?php include '../../../includes/navbar.php'; ?>
+
         <div id="content">
             <h1 class="text-center mb-5"><strong>OPD Patient Details</strong></h1>
 
-            <!-- Search Input -->
             <div class="container mb-3">
                 <input type="text" id="patientSearch" class="form-control" placeholder="Search patients">
             </div>
 
-            <!-- OPD Patients Table -->
             <div class="container">
                 <table class="table table-bordered">
                     <thead>
@@ -39,14 +39,14 @@ ob_start(); // Start output buffering
                             <th>Contact</th>
                             <th>Address</th>
                             <th>Medical History</th>
-                            <th>Patient ID</th> 
+                            <th>Patient ID</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="patientTableBody">
                         <?php foreach ($opd_patients as $patient): ?>
                             <tr class="text-center patient-row" id="patient-row-<?php echo $patient['id']; ?>">
-                                <td class="serial-number"></td> <!-- Serial number will be set dynamically -->
+                                <td class="serial-number"></td>
                                 <td><?php echo htmlspecialchars($patient['name']); ?></td>
                                 <td><?php echo htmlspecialchars($patient['age']); ?></td>
                                 <td><?php echo htmlspecialchars($patient['gender']); ?></td>
@@ -54,7 +54,7 @@ ob_start(); // Start output buffering
                                 <td><?php echo htmlspecialchars($patient['contact']); ?></td>
                                 <td><?php echo htmlspecialchars($patient['address']); ?></td>
                                 <td><?php echo htmlspecialchars($patient['medical_history']); ?></td>
-                                <td>#<?php echo htmlspecialchars($patient['id']); ?></td> 
+                                <td>#<?php echo htmlspecialchars($patient['id']); ?></td>
 
                                 <td>
                                     <div class="dropdown">
@@ -62,17 +62,12 @@ ob_start(); // Start output buffering
                                             . . .
                                         </p>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <li>
-                                                <a class="dropdown-item" href="add_ipd.php?id=<?php echo $patient['id']; ?>">
-                                                    <i class="fa-solid fa-plus"></i> Add to IPD
-                                                </a>
-                                            </li>
+
                                             <li><a class="dropdown-item" href="edit_patient.php?id=<?php echo urlencode($patient['id']); ?>"><i class="fa-solid fa-pen-to-square"></i> Edit</a></li>
                                             <li>
-                                                <!-- <a class="dropdown-item" href="view_patient.php?id=<?php echo $patient['id']; ?>"><i class="fa-regular fa-eye"></i> View Details</a> -->
-                                                <a class="dropdown-item"  href="view_patient.php?id=<?php echo urlencode($patient['id']); ?>"><i class="fa-regular fa-eye"></i> View Details</a>
-                                            
+                                                <a class="dropdown-item" href="view_patient.php?id=<?php echo urlencode($patient['id']); ?>"><i class="fa-regular fa-eye"></i> View Details</a>
                                             </li>
+
                                             <li>
                                                 <a class="dropdown-item delete-patient"
                                                     href="delete_patient.php?id=<?php echo $patient['id']; ?>"
@@ -80,6 +75,30 @@ ob_start(); // Start output buffering
                                                     <i class="fa-solid fa-trash-can"></i> Delete
                                                 </a>
                                             </li>
+
+                                            <div>
+                                                <?php if (in_array($patient['id'], $admitted_ipd_patient_ids)): ?>
+                                                    <button class="viwe_btns  dropdown-item  viwe_btns_admit  " disabled>
+                                                        <i class="fa-solid fa-bed"></i> <strong> Admitted to IPD</strong>
+                                                    </button>
+                                                    <?php
+                                                    // You can add a link to view their IPD details if needed
+                                                    $ipd_details_stmt = $pdo->prepare("SELECT ipd_id FROM patients_ipd WHERE opd_casualty_id = :opd_id");
+                                                    $ipd_details_stmt->execute([':opd_id' => $patient['id']]);
+                                                    $ipd_details = $ipd_details_stmt->fetch(PDO::FETCH_ASSOC);
+                                                    if ($ipd_details):
+                                                    ?>
+                                                        <a href="ipd.php?ipd_id=<?php echo urlencode($ipd_details['ipd_id']); ?>" class="btn btn-sm btn-info  dropdown-item ">
+                                                            <i class="fa-regular  fa-eye"></i> View IPD
+                                                        </a>
+                                                    <?php endif; ?>
+                                                <?php else: ?>
+                                                    <form method="post" action="process_ip_admission.php">
+                                                        <input type="hidden" name="patient_id" value="<?php echo $patient['id']; ?>">
+                                                        <button type="submit" name="admit_to_ip" class="viwe_btns dropdown-item viwe_btns_admit  "><i class="fa-solid fa-bed"></i> Admit to IPD</button>
+                                                    </form>
+                                                <?php endif; ?>
+                                            </div>
                                         </ul>
                                     </div>
                                 </td>
@@ -162,6 +181,4 @@ ob_start(); // Start output buffering
     });
 </script>
 
-<?php
-ob_end_flush(); // Flush the output buffer
-?>
+<?php include "../../../includes/footer.php"; ?>

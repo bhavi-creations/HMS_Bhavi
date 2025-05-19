@@ -1,8 +1,4 @@
-<?php
-ob_start(); // Start output buffering
-?>
-
-
+ 
  
 
 <div id="wrapper">

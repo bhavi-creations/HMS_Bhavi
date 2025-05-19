@@ -1,18 +1,15 @@
-<?php
-ob_start(); // Start output buffering
-?>
+<?php include "../../../includes/header.php"; ?>
 
 <div id="wrapper">
 
     <?php
     include '../../../includes/sidebar.php';
-    include "../../../includes/header.php";
-    include "../../../config/db.php";
+   
 
-    
+
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (isset($_POST['submit_doc_btn'])) {
-    
+
             // Sanitize and validate form inputs
             $name = filter_var($_POST['name'], FILTER_SANITIZE_STRING);
             $age = filter_var($_POST['age'], FILTER_VALIDATE_INT);
@@ -38,27 +35,27 @@ ob_start(); // Start output buffering
                 try {
                     // Set the "OP" prefix for both types
                     $type_prefix = 'OP';
-    
+
                     // Fetch the highest ID for Outpatient (OP) type
                     $stmt = $pdo->prepare("SELECT id FROM patients_opd WHERE id LIKE :type_prefix ORDER BY id DESC LIMIT 1");
                     $stmt->execute([':type_prefix' => $type_prefix . '%']);
                     $last_id = $stmt->fetchColumn();
-    
+
                     if ($last_id) {
                         $last_number = (int)substr($last_id, 8); // Extract the numeric part after the date
                         $new_number = str_pad($last_number + 1, 6, '0', STR_PAD_LEFT); // 6 digits padding
                     } else {
                         $new_number = '000001'; // Start with 000001 if no IDs exist for this type
                     }
-    
+
                     // Generate the new ID in format OPyyymmdd###### (e.g., OP240121000001)
                     $id = $type_prefix . date('ymd') . $new_number; // Combine type prefix, date, and incremented number
-    
+
                     // Handle report uploads
                     $reports = [];
                     if (!empty($_FILES['reports']['name'][0])) {
-                        $target_dir = "../../../assets/uploads/patient_reports/";   
-    
+                        $target_dir = "../../../assets/uploads/patient_reports/";
+
                         // Loop through files if multiple files are uploaded
                         foreach ($_FILES['reports']['name'] as $index => $filename) {
                             $target_file = $target_dir . basename($filename);
@@ -67,9 +64,9 @@ ob_start(); // Start output buffering
                             }
                         }
                     }
-    
+
                     $reports_str = implode(',', $reports);  // Combine file paths into a comma-separated string
-    
+
                     // Insert data into the database
                     $stmt = $pdo->prepare(
                         "INSERT INTO patients_opd 
@@ -77,7 +74,7 @@ ob_start(); // Start output buffering
                         VALUES 
                         (:id, :name, :age, :gender, :doctor, :guardian_name, :contact, :whatsapp_number, :address, :problem, :referred_by, :remarks, :admission_type, :medical_history, :fee, :discount, :reports)"
                     );
-                    
+
                     $stmt->execute([
                         ':id' => $id,
                         ':name' => $name,
@@ -97,8 +94,8 @@ ob_start(); // Start output buffering
                         ':discount' => $discount,
                         ':reports' => $reports_str
                     ]);
-                    
-    
+
+
                     echo '<script>alert("Patient data inserted successfully. Patient ID: ' . $id . '");</script>';
                     header('Location: ' . $_SERVER['PHP_SELF']);
                     exit();
@@ -108,12 +105,16 @@ ob_start(); // Start output buffering
             }
         }
     }
-    
-    
-    ob_end_flush(); // Flush the output buffer
+
+
+
     ?>
 
     <div id="content-wrapper" class="d-flex flex-column bg-white">
+        <?php include '../../../includes/navbar.php'; ?>
+
+
+
         <div id="content">
             <h1 class="text-center"><strong> Add Patient </strong></h1>
             <div class="container">
@@ -144,7 +145,7 @@ ob_start(); // Start output buffering
 
                                 <div class="col-md-3 mt-5">
                                     <label class="control-label mb-2 field_txt">Father/Guardian</label>
-                                    <input type="text" class="form-control field_input_bg" name="guardian_name"  >
+                                    <input type="text" class="form-control field_input_bg" name="guardian_name">
                                 </div>
 
                                 <div class="col-md-3 mt-5">
@@ -154,32 +155,32 @@ ob_start(); // Start output buffering
 
                                 <div class="col-md-3 mt-5">
                                     <label class="control-label mb-2 field_txt">WhatsApp Number</label>
-                                    <input type="tel" class="form-control field_input_bg" name="whatsapp_number"  >
+                                    <input type="tel" class="form-control field_input_bg" name="whatsapp_number">
                                 </div>
 
                                 <div class="col-md-3 mt-5">
                                     <label class="control-label mb-2 field_txt">Address</label>
-                                    <textarea class="form-control field_input_bg" name="address" rows="1"  ></textarea>
+                                    <textarea class="form-control field_input_bg" name="address" rows="1"></textarea>
                                 </div>
 
                                 <div class="col-md-3 mt-5">
                                     <label class="control-label mb-2 field_txt">Problem</label>
-                                    <input type="text" class="form-control field_input_bg" name="problem"  >
+                                    <input type="text" class="form-control field_input_bg" name="problem">
                                 </div>
 
                                 <div class="col-md-3 mt-5">
                                     <label class="control-label mb-2 field_txt">Doctor</label>
-                                    <input type="text" class="form-control field_input_bg" name="doctor"  >
+                                    <input type="text" class="form-control field_input_bg" name="doctor">
                                 </div>
 
                                 <div class="col-md-3 mt-5">
                                     <label class="control-label mb-2 field_txt">Referred By</label>
-                                    <input type="text" class="form-control field_input_bg" name="referred_by"  >
+                                    <input type="text" class="form-control field_input_bg" name="referred_by">
                                 </div>
 
                                 <div class="col-md-3 mt-5">
                                     <label class="control-label mb-2 field_txt">Remarks</label>
-                                    <input type="text" class="form-control field_input_bg" name="remarks"  >
+                                    <input type="text" class="form-control field_input_bg" name="remarks">
                                 </div>
 
                                 <div class="col-md-3 mt-5">
@@ -197,7 +198,7 @@ ob_start(); // Start output buffering
 
                                 <div class="col-md-3 mt-5">
                                     <label class="control-label mb-2 field_txt">Medical History</label>
-                                    <textarea class="form-control field_input_bg" name="medical_history" rows="1"  ></textarea>
+                                    <textarea class="form-control field_input_bg" name="medical_history" rows="1"></textarea>
                                 </div>
 
                                 <div class="col-md-3 mt-5">
@@ -212,7 +213,7 @@ ob_start(); // Start output buffering
 
                                 <div class="col-md-3 mt-5">
                                     <label class="control-label mb-2 field_txt">Final Amount</label>
-                                     
+
                                     <input type="text" class="form-control field_input_bg" id="final_amount" name="final_fee" readonly>
 
                                 </div>
@@ -245,12 +246,13 @@ ob_start(); // Start output buffering
         </div>
     </div>
 
-
+<!-- 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script>
         new DataTable('#example');
         new DataTable('#example1');
-    </script>
+    </script> -->
 
 </div>
+ 

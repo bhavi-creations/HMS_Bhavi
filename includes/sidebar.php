@@ -1,4 +1,4 @@
-<!-- Category Sidebar -->
+ 
 <ul class="navbar-nav category-sidebar sidebar-dark accordion" id="categorySidebar" style="background-color: #e8ecef; width: 60px; position: fixed; top: 0; bottom: 0; left: 0;">
     <li class="nav-item ">
         <a class="nav-link text-center category-link " href="#" data-category="pharmacy">
@@ -24,6 +24,7 @@
 <ul class="navbar-nav main-sidebar sidebar-dark accordion" id="accordionSidebar" style="background-color: #F4F5F9; margin-left: 60px;  ">
     <!-- Content will be updated dynamically -->
 </ul>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -65,7 +66,12 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="patientsDropdown">
                         <li>
-                            <a class="dropdown-item   " href="/Hospital-management-system-own/modules/patients/views/add_patients.php"><i class="fa-solid fa-plus"></i>  Add Patient</a>
+ 
+                            <a class="dropdown-item  " href="/Hospital-management-system-own/modules/patients/views/add_patients.php">
+                            <i class="fa-solid fa-plus"></i> Add Patient
+                            </a>
+
+
                         </li>
                         <li>
                             <a class="dropdown-item  " href="/Hospital-management-system-own/modules/patients/views/causality.php"><i class="fa-solid fa-eye"></i> View causality</a>
