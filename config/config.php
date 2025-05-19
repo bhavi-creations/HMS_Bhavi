@@ -1,17 +1,19 @@
 <?php
+// Detect the protocol
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https://" : "http://";
+
+// Detect host
 $host = $_SERVER['HTTP_HOST'];
-$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://";
 
-// Detect if local
-$isLocal = ($host === 'localhost');
-$folder = $isLocal ? '/HMS_Bhavi' : '';
+// Use folder for local dev
+$folder = ($host === 'localhost') ? '/HMS_Bhavi' : '';
 
-// Final base URL
-$baseurl = "{$protocol}{$host}{$folder}/";
-$basepath = $_SERVER['DOCUMENT_ROOT'] . $folder . "/";
+// Build URLs and paths
+$baseurl = $protocol . $host . $folder . '/';
+$basepath = $_SERVER['DOCUMENT_ROOT'] . $folder . '/';
 
-// DB credentials
-if ($isLocal) {
+// Database credentials
+if ($host === 'localhost') {
     $db_username = "root";
     $db_password = "";
     $db_name     = "hospital_db";
@@ -28,4 +30,3 @@ try {
 } catch (PDOException $e) {
     die("Database connection failed: " . $e->getMessage());
 }
-?>
