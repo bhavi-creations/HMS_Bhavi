@@ -4,7 +4,7 @@
 
     <?php
     include '../../../includes/sidebar.php';
-   
+
 
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -56,16 +56,24 @@
                     if (!empty($_FILES['reports']['name'][0])) {
                         $target_dir = "../../../assets/uploads/patient_reports/";
 
-                        // Loop through files if multiple files are uploaded
                         foreach ($_FILES['reports']['name'] as $index => $filename) {
-                            $target_file = $target_dir . basename($filename);
+                            $filename = basename($filename); // only keep file name
+                            $target_file = $target_dir . $filename;
+
+                            // Optional: Prevent overwriting by appending timestamp if needed
+                            $file_ext = pathinfo($filename, PATHINFO_EXTENSION);
+                            $base_name = pathinfo($filename, PATHINFO_FILENAME);
+                            $new_filename = $base_name . '_' . time() . '.' . $file_ext;
+                            $target_file = $target_dir . $new_filename;
+
                             if (move_uploaded_file($_FILES['reports']['tmp_name'][$index], $target_file)) {
-                                $reports[] = $target_file;  // Store report file paths
+                                $reports[] = $new_filename;  // Store only file names
                             }
                         }
                     }
 
-                    $reports_str = implode(',', $reports);  // Combine file paths into a comma-separated string
+                    $reports_str = implode(',', $reports);  // Save file names only
+
 
                     // Insert data into the database
                     $stmt = $pdo->prepare(
@@ -246,7 +254,7 @@
         </div>
     </div>
 
-<!-- 
+    <!-- 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script>
@@ -255,4 +263,3 @@
     </script> -->
 
 </div>
- 

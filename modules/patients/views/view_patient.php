@@ -129,13 +129,16 @@
 
 
                                                 <?php
-                                                if (!empty($patient['reports'])) {
-                                                    $reports = explode(',', $patient['reports']);
-                                                    foreach ($reports as $report) {
-                                                        $fileName = basename($report);
-                                                        echo "<a class='download_decration' href='" . htmlspecialchars($report) . "' download>" . htmlspecialchars($fileName) . " <i class='fa fa-download download-icon'></i></a><br>";
-                                                    }
-                                                } else {
+                                               if (!empty($patient['reports'])) {
+    $reports = explode(',', $patient['reports']);
+    foreach ($reports as $report) {
+        $fileName = basename($report);
+        $filePath = "../../../assets/uploads/patient_reports/" . $fileName;
+        $fileUrl = "/assets/uploads/patient_reports/" . rawurlencode($fileName); // for public access
+        echo "<a class='download_decration' href='" . htmlspecialchars($fileUrl) . "' download>" . htmlspecialchars($fileName) . " <i class='fa fa-download download-icon'></i></a><br>";
+    }
+}
+else {
                                                     echo "No Reports";
                                                 }
                                                 ?>
@@ -221,8 +224,11 @@
                                         $reports = explode(',', $patient['reports']);
                                         echo "<div class='row'>";
                                         foreach ($reports as $report) {
-                                            $fileName = basename($report);
-                                            $fileExt = pathinfo($report, PATHINFO_EXTENSION);
+                                          $fileName = basename($report);
+$fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
+$filePath = "../../../assets/uploads/patient_reports/" . $fileName;
+$fileUrl = "/assets/uploads/patient_reports/" . rawurlencode($fileName);
+
 
                                             echo "<div class='col-md-3 my-5'>";
 
