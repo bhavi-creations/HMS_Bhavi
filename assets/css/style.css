@@ -532,11 +532,13 @@ p.p_tag:hover {
   color: white;
 
 }
-.edit-doctor:hover{
+
+.edit-doctor:hover {
   text-decoration: none;
   color: rgb(3, 26, 103);
   font-weight: 800;
 }
+
 .delete-doctor:hover {
   text-decoration: none;
   color: rgb(255, 0, 0);
@@ -565,5 +567,21 @@ p.p_tag:hover {
   font-weight: bold;
 }
 
- 
+.download_decration {
+  text-decoration: none;
+  color: #000;
+}
 
+.download_decration:hover {
+  color: rgb(10, 200, 26);
+  text-decoration: none;
+
+}
+
+.download-icon {
+  color: rgb(10, 200, 26);
+}
+
+.download-icon:hover {
+  color: rgb(10, 200, 26);
+}

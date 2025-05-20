@@ -141,26 +141,7 @@
                                                     echo "No Reports";
                                                 }
                                                 ?>
-                                                <style>
-                                                    .download_decration {
-                                                        text-decoration: none;
-                                                        color: #000;
-                                                    }
-
-                                                    .download_decration:hover {
-                                                        color: rgb(10, 200, 26);
-                                                        text-decoration: none;
-
-                                                    }
-
-                                                    .download-icon {
-                                                        color: rgb(10, 200, 26);
-                                                    }
-
-                                                    .download-icon:hover {
-                                                        color: rgb(10, 200, 26);
-                                                    }
-                                                </style>
+                                                
                                             </div>
 
                                         </div>
