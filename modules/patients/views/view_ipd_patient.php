@@ -39,7 +39,7 @@
                                         <p><strong>WhatsApp Number:</strong> <?php echo htmlspecialchars($patient['whatsapp_number']); ?></p>
                                         <p><strong>Address:</strong> <?php echo nl2br(htmlspecialchars($patient['address'])); ?></p>
                                         <p><strong>Problem:</strong> <?php echo htmlspecialchars($patient['problem']); ?></p>
-                                           <p><strong>Doctor:</strong> <?php echo htmlspecialchars($patient['doctor']); ?></p>
+                                        <p><strong>Doctor:</strong> <?php echo htmlspecialchars($patient['doctor']); ?></p>
                                         <p><strong>Referred By:</strong> <?php echo htmlspecialchars($patient['referred_by']); ?></p>
                                         <p><strong>Remarks:</strong> <?php echo nl2br(htmlspecialchars($patient['remarks'])); ?></p>
                                         <p><strong>Medical History (OPD):</strong> <?php echo nl2br(htmlspecialchars($patient['opd_medical_history'])); ?></p>
@@ -56,33 +56,19 @@
                                             <?php
                                             if (!empty($patient['reports'])) {
                                                 $reports = explode(',', $patient['reports']);
+
+
                                                 foreach ($reports as $report) {
                                                     $fileName = basename($report);
-                                                    echo "<a class='download_decration' href='" . htmlspecialchars($report) . "' download>" . htmlspecialchars($fileName) . " <i class='fa fa-download download-icon'></i></a><br>";
+                                                    // Build URL using baseurl + relative path + filename
+                                                    $fileUrl = $baseurl . "assets/uploads/patient_reports/" . $fileName;
+                                                    echo "<a class='download_decration' href='" . htmlspecialchars($fileUrl) . "' download>" . htmlspecialchars($fileName) . " <i class='fa fa-download download-icon'></i></a><br>";
                                                 }
                                             } else {
                                                 echo "No Reports";
                                             }
                                             ?>
-                                            <style>
-                                                .download_decration {
-                                                    text-decoration: none;
-                                                    color: #000;
-                                                }
-
-                                                .download_decration:hover {
-                                                    color: rgb(10, 200, 26);
-                                                    text-decoration: none;
-                                                }
-
-                                                .download-icon {
-                                                    color: rgb(10, 200, 26);
-                                                }
-
-                                                .download-icon:hover {
-                                                    color: rgb(10, 200, 26);
-                                                }
-                                            </style>
+                                        
                                         </div>
                                         <p><strong>Discharge Date:</strong> <?php echo htmlspecialchars($patient['discharge_date'] ? $patient['discharge_date'] : 'N/A'); ?></p>
                                         <p><strong>Discharge Status:</strong> <?php echo htmlspecialchars($patient['discharge_status']); ?></p>
@@ -96,47 +82,49 @@
                                 </div>
 
                                  <div class="container my-5">
-                            <div class="card" style="border-radius: 10px;">
-                                <div class="card-header text-black text-center">
-                                    <h4>Patient Reports</h4>
-                                </div>
-                                <div class="card-body">
-                                    <?php
-                                    if (!empty($patient['reports'])) {
-                                        $reports = explode(',', $patient['reports']);
-                                        echo "<div class='row'>";
-                                        foreach ($reports as $report) {
-                                            $fileName = basename($report);
-                                            $fileExt = pathinfo($report, PATHINFO_EXTENSION);
+                                    <div class="card" style="border-radius: 10px;">
+                                        <div class="card-header text-black text-center">
+                                            <h4>Patient Reports</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <?php
+                                            if (!empty($patient['reports'])) {
+                                                $reports = explode(',', $patient['reports']);
+                                                echo "<div class='row'>";
+                                                foreach ($reports as $report) {
+                                                    $fileName = basename($report);
+                                                    $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
+                                                    $fileUrl = $baseurl . "assets/uploads/patient_reports/" . $fileName;
 
-                                            echo "<div class='col-md-3 my-5'>";
+                                                    echo "<div class='col-md-3 my-5'>";
 
-                                            // Check if the file is a PDF
-                                            if ($fileExt === 'pdf') {
-                                                echo "<h5>$fileName</h5>";
-                                                echo "<embed src='" . htmlspecialchars($report) . "' width='100%' height='400px' type='application/pdf'>";
+                                                    if ($fileExt === 'pdf') {
+                                                        echo "<h5>$fileName</h5>";
+                                                        echo "<embed src='" . htmlspecialchars($fileUrl) . "' width='100%' height='400px' type='application/pdf'>";
+                                                    } elseif (in_array($fileExt, ['jpg', 'jpeg', 'png', 'gif'])) {
+                                                        echo "<h5>$fileName</h5>";
+                                                        echo "<img src='" . htmlspecialchars($fileUrl) . "' alt='$fileName' width='100%' style='max-height: 400px;'>";
+                                                    } elseif ($fileExt === 'txt') {
+                                                        echo "<h5>$fileName</h5>";
+                                                        // For security, avoid file_get_contents if file outside webroot; if safe:
+                                                        $filePath = __DIR__ . '/../../../assets/uploads/patient_reports/' . $fileName;
+                                                        if (file_exists($filePath)) {
+                                                            $fileContent = file_get_contents($filePath);
+                                                            echo "<pre>" . htmlspecialchars($fileContent) . "</pre>";
+                                                        } else {
+                                                            echo "<p>File not found</p>";
+                                                        }
+                                                    }
+                                                    echo "</div>";
+                                                }
+                                                echo "</div>";
+                                            } else {
+                                                echo "<p class='text-center'>No Reports Available</p>";
                                             }
-                                            // If it's an image
-                                            elseif (in_array($fileExt, ['jpg', 'jpeg', 'png', 'gif'])) {
-                                                echo "<h5>$fileName</h5>";
-                                                echo "<img src='" . htmlspecialchars($report) . "' alt='$fileName' width='100%' style='max-height: 400px;'>";
-                                            }
-                                            // If it's a text file (or other supported types)
-                                            elseif ($fileExt === 'txt') {
-                                                echo "<h5>$fileName</h5>";
-                                                $fileContent = file_get_contents($report);
-                                                echo "<pre>$fileContent</pre>";
-                                            }
-                                            echo "</div>";
-                                        }
-                                        echo "</div>";
-                                    } else {
-                                        echo "<p class='text-center'>No Reports Available</p>";
-                                    }
-                                    ?>
+                                            ?>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
                     <?php
                             } else {
                                 echo "<div class='alert alert-danger text-center'>Error: Invalid IPD ID.</div>";
@@ -153,5 +141,3 @@
         </div>
     </div>
 </div>
-
- 

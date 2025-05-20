@@ -1,22 +1,15 @@
 <?php include "../../../includes/header.php"; ?>
 
 <div id="wrapper">
-
     <?php
     include '../../../includes/sidebar.php';
-   
-
-    // Capture the referrer URL or fallback to dashboard
     $referrer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '../../../dashboard.php';
 
     if (isset($_GET['id'])) {
         $patient_id = $_GET['id'];
 
-        // Validate the ID format (YYMMDD-XXXXXX)
         if (preg_match('/^[A-Z]{2}\d{6}\d{6}$/', $patient_id)) {
-
             try {
-                // Fetch patient details
                 $stmt = $pdo->prepare("SELECT * FROM patients_opd WHERE id = :id");
                 $stmt->execute([':id' => $patient_id]);
                 $patient = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -30,19 +23,17 @@
                     $report_to_delete = filter_input(INPUT_GET, 'delete_report', FILTER_SANITIZE_STRING);
                     $existing_reports = $patient['reports'] ? explode(',', $patient['reports']) : [];
 
-                    // Remove the specified report
                     $updated_reports = array_filter($existing_reports, fn($report) => $report !== $report_to_delete);
 
-                    // Update the database
                     $stmt = $pdo->prepare("UPDATE patients_opd SET reports = :reports WHERE id = :id");
                     $stmt->execute([
                         ':reports' => implode(',', $updated_reports),
                         ':id' => $patient_id,
                     ]);
 
-                    // Delete the file from the server
-                    if (file_exists($report_to_delete)) {
-                        unlink($report_to_delete);
+                    $full_path = "../../../assets/uploads/patient_reports/" . $report_to_delete;
+                    if (file_exists($full_path)) {
+                        unlink($full_path);
                     }
 
                     header("Location: edit_patient.php?id=$patient_id");
@@ -50,7 +41,6 @@
                 }
 
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                    // Sanitize form inputs
                     $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
                     $age = filter_input(INPUT_POST, 'age', FILTER_VALIDATE_INT);
                     $gender = filter_input(INPUT_POST, 'gender', FILTER_SANITIZE_STRING);
@@ -60,24 +50,21 @@
                     $medical_history = filter_input(INPUT_POST, 'medical_history', FILTER_SANITIZE_STRING);
                     $admission_type = filter_input(INPUT_POST, 'admission_type', FILTER_SANITIZE_STRING);
 
-                    // Handle file uploads
                     $uploaded_files = [];
                     if (!empty($_FILES['reports']['name'][0])) {
                         $upload_dir = '../../../assets/uploads/patient_reports/';
                         foreach ($_FILES['reports']['name'] as $key => $file_name) {
                             $target_path = $upload_dir . basename($file_name);
                             if (move_uploaded_file($_FILES['reports']['tmp_name'][$key], $target_path)) {
-                                $uploaded_files[] = $target_path; // Save full file path
+                                $uploaded_files[] = $file_name; // Save only the filename
                             }
                         }
                     }
 
-                    // Combine new and old documents
                     $existing_documents = $patient['reports'] ? explode(',', $patient['reports']) : [];
                     $all_documents = array_merge($existing_documents, $uploaded_files);
                     $documents_str = implode(',', $all_documents);
 
-                    // Update database
                     $stmt = $pdo->prepare("
                         UPDATE patients_opd 
                         SET 
@@ -96,7 +83,7 @@
                     $stmt->execute([
                         ':name' => $name,
                         ':age' => $age,
-                        ':gender' => $gender,   
+                        ':gender' => $gender,
                         ':contact' => $contact,
                         ':address' => $address,
                         ':doctor' => $doctor,
@@ -106,7 +93,6 @@
                         ':id' => $patient_id,
                     ]);
 
-                    // Redirect to the referring page
                     $redirect_url = filter_input(INPUT_POST, 'referrer', FILTER_SANITIZE_URL);
                     header("Location: " . $redirect_url);
                     exit();
@@ -124,9 +110,8 @@
     ?>
 
     <div id="content-wrapper" class="d-flex flex-column bg-white">
+        <?php include '../../../includes/navbar.php'; ?>
 
-    <?php include '../../../includes/navbar.php'; ?>
-    
         <div id="content">
             <h1 class="text-center"><strong>Edit Patient</strong></h1>
             <div class="container">
@@ -137,7 +122,6 @@
                         <div class="col-12 mt-5 d-flex flex-row justify-content-end">
                             <button type="submit" class="btn btn-primary">Update</button>
                         </div>
-
 
                         <div class="row">
                             <div class="col-md-4 mt-5">
@@ -183,12 +167,8 @@
                                 <label class="control-label mb-2">Upload New Reports</label>
                                 <input type="file" name="reports[]" class="form-control" multiple>
                             </div>
-
-
-
-
-
                         </div>
+
                         <div class="container my-5">
                             <div class="card" style="border-radius: 10px;">
                                 <div class="card-header text-black text-center">
@@ -202,28 +182,24 @@
                                         foreach ($reports as $report) {
                                             $fileName = basename($report);
                                             $fileExt = pathinfo($report, PATHINFO_EXTENSION);
+                                            $reportUrl = $baseurl . "assets/uploads/patient_reports/" . $fileName;
+                                            $localPath = "../../../assets/uploads/patient_reports/" . $fileName;
 
                                             echo "<div class='col-md-3 my-5 text-center'>";
+                                            echo "<h5>$fileName</h5>";
 
-                                            // Check if the file is a PDF
                                             if ($fileExt === 'pdf') {
-                                                echo "<h5>$fileName</h5>";
-                                                echo "<embed src='" . htmlspecialchars($report) . "' width='100%' height='400px' type='application/pdf'>";
-                                            }
-                                            // If it's an image
-                                            elseif (in_array($fileExt, ['jpg', 'jpeg', 'png', 'gif'])) {
-                                                echo "<h5>$fileName</h5>";
-                                                echo "<img src='" . htmlspecialchars($report) . "' alt='$fileName' width='100%' style='max-height: 400px;'>";
-                                            }
-                                            // If it's a text file (or other supported types)
-                                            elseif ($fileExt === 'txt') {
-                                                echo "<h5>$fileName</h5>";
-                                                $fileContent = file_get_contents($report);
-                                                echo "<pre>$fileContent</pre>";
+                                                echo "<embed src='" . htmlspecialchars($reportUrl) . "' width='100%' height='400px' type='application/pdf'>";
+                                            } elseif (in_array($fileExt, ['jpg', 'jpeg', 'png', 'gif'])) {
+                                                echo "<img src='" . htmlspecialchars($reportUrl) . "' alt='$fileName' width='100%' style='max-height: 400px;'>";
+                                            } elseif ($fileExt === 'txt') {
+                                                if (file_exists($localPath)) {
+                                                    $fileContent = file_get_contents($localPath);
+                                                    echo "<pre>$fileContent</pre>";
+                                                }
                                             }
 
-                                            // Delete button
-                                            echo "<a href='edit_patient.php?id={$patient_id}&delete_report=" . urlencode($report) . "' class='btn btn-danger btn-sm mt-3'>Delete</a>";
+                                            echo "<a href='edit_patient.php?id={$patient_id}&delete_report=" . urlencode($fileName) . "' class='btn btn-danger btn-sm mt-3'>Delete</a>";
                                             echo "</div>";
                                         }
                                         echo "</div>";
@@ -233,15 +209,10 @@
                                     ?>
                                 </div>
                             </div>
-                        </div> 
+                        </div>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-
- 
 </div>
-<?php ob_end_flush(); ?>
-
- 
