@@ -573,15 +573,15 @@ p.p_tag:hover {
 }
 
 .download_decration:hover {
-  color: rgb(10, 200, 26);
-  text-decoration: none;
+  color: rgb(10, 200, 26) !important;
+  text-decoration: none !important;
 
 }
 
 .download-icon {
-  color: rgb(10, 200, 26);
+  color: rgb(10, 200, 26) !important;
 }
 
 .download-icon:hover {
-  color: rgb(10, 200, 26);
+  color: rgb(10, 200, 26) !important;
 }
