@@ -129,16 +129,15 @@
 
 
                                                 <?php
-                                               if (!empty($patient['reports'])) {
-    $reports = explode(',', $patient['reports']);
-    foreach ($reports as $report) {
-        $fileName = basename($report);
-        $filePath = "../../../assets/uploads/patient_reports/" . $fileName;
-        $fileUrl = "/assets/uploads/patient_reports/" . rawurlencode($fileName); // for public access
-        echo "<a class='download_decration' href='" . htmlspecialchars($fileUrl) . "' download>" . htmlspecialchars($fileName) . " <i class='fa fa-download download-icon'></i></a><br>";
-    }
-}
-else {
+                                                if (!empty($patient['reports'])) {
+                                                    $reports = explode(',', $patient['reports']);
+                                                    foreach ($reports as $report) {
+                                                        $fileName = basename($report);
+                                                        $filePath = "../../../assets/uploads/patient_reports/" . $fileName;
+                                                        $fileUrl = "/assets/uploads/patient_reports/" . rawurlencode($fileName); // for public access
+                                                        echo "<a class='download_decration' href='" . htmlspecialchars($fileUrl) . "' download>" . htmlspecialchars($fileName) . " <i class='fa fa-download download-icon'></i></a><br>";
+                                                    }
+                                                } else {
                                                     echo "No Reports";
                                                 }
                                                 ?>
@@ -212,7 +211,6 @@ else {
 
 
 
-
                         <div class="container my-5">
                             <div class="card" style="border-radius: 10px;">
                                 <div class="card-header text-black text-center">
@@ -224,30 +222,31 @@ else {
                                         $reports = explode(',', $patient['reports']);
                                         echo "<div class='row'>";
                                         foreach ($reports as $report) {
-                                          $fileName = basename($report);
-$fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
-$filePath = "../../../assets/uploads/patient_reports/" . $fileName;
-$fileUrl = "/assets/uploads/patient_reports/" . rawurlencode($fileName);
+                                            $fileName = basename($report);
+                                            $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+                                            $fileUrl = "/assets/uploads/patient_reports/" . rawurlencode($fileName);
+                                            $filePath = "../../../assets/uploads/patient_reports/" . $fileName;
 
+                                            echo "<div class='col-md-4 mb-5'>";
+                                            echo "<h6>$fileName</h6>";
 
-                                            echo "<div class='col-md-3 my-5'>";
-
-                                            // Check if the file is a PDF
                                             if ($fileExt === 'pdf') {
-                                                echo "<h5>$fileName</h5>";
-                                                echo "<embed src='" . htmlspecialchars($report) . "' width='100%' height='400px' type='application/pdf'>";
+                                                echo "<embed src='" . htmlspecialchars($fileUrl) . "' type='application/pdf' width='100%' height='400px'/>";
+                                            } elseif (in_array($fileExt, ['jpg', 'jpeg', 'png', 'gif'])) {
+                                                echo "<img src='" . htmlspecialchars($fileUrl) . "' alt='$fileName' class='img-fluid' style='max-height: 400px;' />";
+                                            } elseif ($fileExt === 'txt') {
+                                                if (file_exists($filePath)) {
+                                                    $fileContent = file_get_contents($filePath);
+                                                    echo "<pre style='height: 400px; overflow-y: auto; background-color: #f9f9f9; padding: 10px;'>"
+                                                        . htmlspecialchars($fileContent) . "</pre>";
+                                                } else {
+                                                    echo "<p class='text-danger'>Text file not found locally.</p>";
+                                                }
+                                            } else {
+                                                echo "<p class='text-muted'>Preview not supported for this file type.</p>";
                                             }
-                                            // If it's an image
-                                            elseif (in_array($fileExt, ['jpg', 'jpeg', 'png', 'gif'])) {
-                                                echo "<h5>$fileName</h5>";
-                                                echo "<img src='" . htmlspecialchars($report) . "' alt='$fileName' width='100%' style='max-height: 400px;'>";
-                                            }
-                                            // If it's a text file (or other supported types)
-                                            elseif ($fileExt === 'txt') {
-                                                echo "<h5>$fileName</h5>";
-                                                $fileContent = file_get_contents($report);
-                                                echo "<pre>$fileContent</pre>";
-                                            }
+
+                                            echo "<div class='mt-2'><a class='btn btn-sm btn-outline-primary' href='" . htmlspecialchars($fileUrl) . "' download><i class='fa fa-download'></i> Download</a></div>";
                                             echo "</div>";
                                         }
                                         echo "</div>";
@@ -258,6 +257,7 @@ $fileUrl = "/assets/uploads/patient_reports/" . rawurlencode($fileName);
                                 </div>
                             </div>
                         </div>
+
 
                     </div>
                 </div>
