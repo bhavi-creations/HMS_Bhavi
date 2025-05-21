@@ -13,7 +13,7 @@
     $casualty_patients = $casualty_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
-    
+
     // Fetch all IPD patient IDs for quick checking
     $ipd_ids_stmt = $pdo->prepare("SELECT opd_casualty_id FROM patients_ipd");
     $ipd_ids_stmt->execute();
