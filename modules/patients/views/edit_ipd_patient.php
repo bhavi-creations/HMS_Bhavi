@@ -7,7 +7,7 @@ if (isset($_GET['ipd_id']) && !empty($_GET['ipd_id'])) {
 
     // Fetch IPD patient data based on the ID
     try {
-        $stmt = $pdo->prepare("SELECT * FROM patients_ipd WHERE ipd_id = :ipd_id");
+        $stmt = $pdo->prepare("SELECT ipd.*, opd.id as opd_id FROM patients_ipd as ipd LEFT JOIN patients_opd as opd ON ipd.opd_casualty_id = opd.id WHERE ipd.ipd_id = :ipd_id");
         $stmt->execute([':ipd_id' => $ipd_id]);
         $patient = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -97,8 +97,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $existing_reports = !empty($_POST['existing_reports']) ? explode(',', $_POST['existing_reports']) : [];
     $reports_to_remove = !empty($_POST['existing_reports_to_remove']) ? $_POST['existing_reports_to_remove'] : [];
 
-     // Filter out the reports to be removed
-    $existing_reports = array_filter($existing_reports, function($report) use ($reports_to_remove) {
+    // Filter out the reports to be removed
+    $existing_reports = array_filter($existing_reports, function ($report) use ($reports_to_remove) {
         return !in_array($report, $reports_to_remove);
     });
 
@@ -128,7 +128,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             final_fee = :final_fee,
             discharge_date = :discharge_date,
             discharge_status = :discharge_status,
-            reports = :reports,
             updated_at = NOW()
             WHERE ipd_id = :ipd_id");
 
@@ -153,23 +152,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ':final_fee' => $final_fee,
             ':discharge_date' => $discharge_date,
             ':discharge_status' => $discharge_status,
-            ':reports' => $reports_string
         ]);
-
-        // After successful update, delete the files that were marked for removal.
-        foreach ($reports_to_remove as $file_path) {
-             if (file_exists($file_path)) {
-                unlink($file_path); // Delete the file.
-             }
-        }
-        // Redirect to the view page after successful update
-        header("Location: view_ipd_patient.php?ipd_id=" . urlencode($ipd_id));
-        exit();
-
     } catch (PDOException $e) {
-        // Handle database errors
-        die("Error updating patient data: " . $e->getMessage());
+        die("Error updating patients_ipd table: " . $e->getMessage());
     }
+
+    // Update the patients_opd table with the report file paths
+    try {
+        $stmt_opd = $pdo->prepare("UPDATE patients_opd SET reports = :reports WHERE id = :opd_casualty_id"); // Modified query
+        $stmt_opd->execute([
+            ':reports' => $reports_string,
+            ':opd_casualty_id' => $patient['opd_id'], // Use the fetched opd_casualty_id
+        ]);
+    } catch (PDOException $e) {
+        die("Error updating patients_opd table: " . $e->getMessage());
+    }
+
+    // After successful update, delete the files that were marked for removal.
+    foreach ($reports_to_remove as $file_path) {
+        if (file_exists($file_path)) {
+            unlink($file_path); // Delete the file.
+        }
+    }
+    // Redirect to the view page after successful update
+    header("Location: view_ipd_patient.php?ipd_id=" . urlencode($ipd_id));
+    exit();
 }
 
 ?>
@@ -246,7 +253,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <label for="admission_date" class="form-label">Admission Date</label>
                                     <input type="date" class="form-control" id="admission_date" name="admission_date" value="<?php echo isset($patient['admission_date']) ? htmlspecialchars(date('Y-m-d', strtotime($patient['admission_date']))) : ''; ?>" required>
                                 </div>
-                                 <div class="mb-3">
+                                <div class="mb-3">
                                     <label for="admission_time" class="form-label">Admission Time</label>
                                     <input type="time" class="form-control" id="admission_time" name="admission_time" value="<?php echo isset($patient['admission_date']) ? htmlspecialchars(date('H:i', strtotime($patient['admission_date']))) : ''; ?>" required>
                                 </div>
@@ -270,37 +277,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <label for="final_fee" class="form-label">Final Fee</label>
                                     <input type="number" step="0.01" class="form-control" id="final_fee" name="final_fee" value="<?php echo htmlspecialchars($patient['final_fee']); ?>">
                                 </div>
-                                 <div class="mb-3 d-flex align-items-center">
+                                <div class="mb-3 d-flex align-items-center">
                                     <div style="flex: 1;">
-                                        <label for="discharge_date" class="form-label">Discharge Date</label>
+                                        <label for="discharge_date" class="form-label">Discharge
+                                            Date</label>
                                         <input type="date" class="form-control" id="discharge_date" name="discharge_date"
-                                               value="<?php echo isset($patient['discharge_date']) ? htmlspecialchars(date('Y-m-d', strtotime($patient['discharge_date']))) : ''; ?>">
+                                            value="<?php echo isset($patient['discharge_date']) ? htmlspecialchars(date('Y-m-d', strtotime($patient['discharge_date']))) : ''; ?>">
                                     </div>
                                     <div style="flex: 1;">
-                                        <label for="discharge_time" class="form-label">Discharge Time</label>
+                                        <label for="discharge_time" class="form-label">Discharge
+                                            Time</label>
                                         <input type="time" class="form-control" id="discharge_time" name="discharge_time"
-                                               value="<?php echo isset($patient['discharge_date']) ? htmlspecialchars(date('H:i', strtotime($patient['discharge_date']))) : ''; ?>">
+                                            value="<?php echo isset($patient['discharge_date']) ? htmlspecialchars(date('H:i', strtotime($patient['discharge_date']))) : ''; ?>">
                                     </div>
                                     <button type="button" class="btn btn-danger clear-datetime-btn"
-                                            onclick="clearDischargeDateTime()">
+                                        onclick="clearDischargeDateTime()">
                                         <i class="fa-solid fa-eraser"></i> Clear
                                     </button>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="discharge_status" class="form-label">Discharge Status</label>
+                                    <label for="discharge_status" class="form-label">Discharge
+                                        Status</label>
                                     <select class="form-select" id="discharge_status" name="discharge_status">
-                                        <option value="Admitted" <?php echo ($patient['discharge_status'] === 'Admitted') ? 'selected' : ''; ?>>Admitted</option>
-                                        <option value="Discharged" <?php echo ($patient['discharge_status'] === 'Discharged') ? 'selected' : ''; ?>>Discharged</option>
+                                        <option value="Admitted" <?php echo ($patient['discharge_status'] === 'Admitted') ? 'selected' : ''; ?>>
+                                            Admitted
+                                        </option>
+                                        <option value="Discharged" <?php echo ($patient['discharge_status'] === 'Discharged') ? 'selected' : ''; ?>>
+                                            Discharged
+                                        </option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="reports" class="form-label">Reports (Upload New)</label>
-                                    <input type="file" class="form-control" id="reports" name="reports[]" multiple>
-                                    <small class="form-text text-muted">You can upload multiple files (PDF, JPG, PNG, GIF). Maximum size 5MB per file.</small>
+                                    <label for="reports" class="form-label">Reports (Upload
+                                        New)</label>
+                                    <input type="file" class="form-control" id="reports" name="reports[]" multiple />
+                                    <small class="form-text text-muted">You can upload multiple files
+                                        (PDF, JPG, PNG, GIF). Maximum size 5MB per file.</small>
                                 </div>
                                 <?php if (!empty($patient['reports'])): ?>
                                     <div class="mb-3">
-                                        <label class="form-label">Current Reports</label><br>
+                                        <label class="form-label">Current Reports</label><br />
                                         <?php
                                         $existing_reports = explode(',', $patient['reports']);
                                         foreach ($existing_reports as $report):
@@ -311,26 +327,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             echo '</div>';
                                         endforeach;
                                         ?>
-                                        <input type="hidden" name="existing_reports" value="<?php echo htmlspecialchars($patient['reports']); ?>">
-                                        <small class="form-text text-muted">Check the box to remove existing reports.</small>
+                                        <input type="hidden" name="existing_reports"
+                                            value="<?php echo htmlspecialchars($patient['reports']); ?>" />
+                                        <small class="form-text text-muted">Check the box to remove
+                                            existing reports.</small>
                                     </div>
                                 <?php endif; ?>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Update Patient</button>
-                        <a href="view_ipd_patient.php?ipd_id=<?php echo urlencode($patient['ipd_id']); ?>" class="btn btn-secondary"><i class="fa-solid fa-ban"></i> Cancel</a>
+                        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i>
+                            Update Patient</button>
+                        <a href="view_ipd_patient.php?ipd_id=<?php echo urlencode($patient['ipd_id']); ?>"
+                            class="btn btn-secondary"><i class="fa-solid fa-ban"></i> Cancel</a>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<?php include "../../../includes/footer.php"; ?>
-
+ 
 <script>
-function clearDischargeDateTime() {
-    document.getElementById("discharge_date").value = "";
-    document.getElementById("discharge_time").value = "";
-}
+    function clearDischargeDateTime() {
+        document.getElementById("discharge_date").value = "";
+        document.getElementById("discharge_time").value = "";
+    }
 </script>
