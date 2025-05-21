@@ -24,7 +24,7 @@
 
 </head>
 
-<body class=" " style="background: #F4F5F9;">
+<body class=" " style="background: #A9A8D4;">
 
     <div class="container">
 
@@ -85,7 +85,7 @@
                                     <hr>
 
                                     <div class="text-center">
-                                        <a class="small" href="register.php">Create an Account!</a>
+                                        <a class="small" href="login.php">Already have a account</a>
                                     </div>
                                 </div>
                             </div>
