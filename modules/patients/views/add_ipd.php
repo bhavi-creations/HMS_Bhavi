@@ -342,9 +342,8 @@
                 }
                 ?>
             </div>
-        </div>
-        <?php include '../../../includes/footer.php'; ?>
+        </div> 
     </div>
 </div>
 
-<?php include "../../../includes/end.php"; ?>
+ 
