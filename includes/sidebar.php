@@ -1,37 +1,41 @@
- 
+ <ul class="navbar-nav category-sidebar sidebar-dark accordion" id="categorySidebar" style="background-color: #e8ecef; width: 60px; position: fixed; top: 0; bottom: 0; left: 0;">
+     <li class="nav-item ">
+         <a class="nav-link text-center category-link " href="#" data-category="pharmacy">
+             <i class="fa-solid fa-capsules all_black_icon"></i>
+             <p class="all_black">Pharmacy</p>
+         </a>
+     </li>
+     <li class="nav-item">
+         <a class="nav-link text-center category-link" href="#" data-category="recption">
+             <i class="fa-solid fa-user-md all_black_icon"></i>
+             <p class="all_black">Recption</p>
+         </a>
+     </li>
+     <li class="nav-item">
+         <a class="nav-link text-center category-link" href="#" data-category="lab">
+             <i class="fa-solid fa-house all_black_icon"></i>
+             <p class="all_black">Lab</p>
+         </a>
+     </li>
+     <li class="nav-item">
+         <a class="nav-link text-center category-link" href="#" data-category="managment">
+             <i class="fa-solid fa-house all_black_icon"></i>
+             <p class="all_black">Managment</p>
+         </a>
+     </li>
+ </ul>
 
-<ul class="navbar-nav category-sidebar sidebar-dark accordion" id="categorySidebar" style="background-color: #e8ecef; width: 60px; position: fixed; top: 0; bottom: 0; left: 0;">
-    <li class="nav-item ">
-        <a class="nav-link text-center category-link " href="#" data-category="pharmacy">
-            <i class="fa-solid fa-capsules all_black_icon"></i>
-            <p class="all_black">Pharmacy</p>
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-center category-link" href="#" data-category="recption">
-            <i class="fa-solid fa-user-md all_black_icon"></i>
-            <p class="all_black">Recption</p>
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-center category-link" href="#" data-category="lab">
-            <i class="fa-solid fa-house all_black_icon"></i>
-            <p class="all_black">Lab</p>
-        </a>
-    </li>
-</ul>
+ <!-- Main Sidebar -->
+ <ul class="navbar-nav main-sidebar sidebar-dark accordion" id="accordionSidebar" style="background-color: #F4F5F9; margin-left: 60px;"></ul>
 
-<!-- Main Sidebar -->
-<ul class="navbar-nav main-sidebar sidebar-dark accordion" id="accordionSidebar" style="background-color: #F4F5F9; margin-left: 60px;"></ul>
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script>
+     const baseurl = <?= json_encode($baseurl); ?>;
 
-<script>
-    const baseurl = <?= json_encode($baseurl); ?>;
-
-    $(document).ready(function() {
-        const sidebarContent = {
-            pharmacy: `
+     $(document).ready(function() {
+         const sidebarContent = {
+             pharmacy: `
                 <a class="sidebar-brand d-flex align-items-center justify-content-center bg-light text-primary" href="${baseurl}index.php">
                     <div class="sidebar-brand-text mx-3 inline_heading">Pharmacy</div>
                 </a>
@@ -50,7 +54,7 @@
                     </a>
                 </li>
             `,
-            recption: `
+             recption: `
                 <a class="sidebar-brand d-flex align-items-center justify-content-center bg-light text-primary" href="${baseurl}index.php">
                     <div class="sidebar-brand-text mx-3 inline_heading">HMS</div>
                 </a>
@@ -79,7 +83,7 @@
                     </ul>
                 </li>
             `,
-            lab: `
+             lab: `
                 <a class="sidebar-brand d-flex align-items-center justify-content-center bg-light text-primary" href="${baseurl}index.php">
                     <div class="sidebar-brand-text mx-3 inline_heading">Lab</div>
                 </a>
@@ -97,23 +101,42 @@
                         </p>
                     </a>
                 </li>
+            `,
+             managment: `
+                <a class="sidebar-brand d-flex align-items-center justify-content-center bg-light text-primary" href="${baseurl}index.php">
+                    <div class="sidebar-brand-text mx-3 inline_heading">Managment</div>
+                </a>
+                 <li class="menu-item dropdown menu_tag">
+                    <a class="menu-link dropdown-toggle link_tag" href="#" id="WardsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <p class="menu-content">
+                            <i class="fa-solid fa-users"></i> Wards/Beds
+                        </p>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="EardsDropdown">
+                        <li><a class="dropdown-item" href="${baseurl}modules/wards/views/add_ward.php"><i class="fa-solid fa-plus"></i> Add Wards</a></li>
+                        <li><a class="dropdown-item" href="${baseurl}modules/beds/views/add_bed.php"><i class="fa-solid fa-plus"></i> Add Beds</a></li>
+                        <li><a class="dropdown-item" href="${baseurl}modules/beds/views/view_beds.php"><i class="fa-solid fa-eye"></i> View Beds</a></li>
+                    </ul>
+                </li>
+               
+                
             `
-        };
+         };
 
-        function updateSidebar(category) {
-            const content = sidebarContent[category] || '';
-            $('.main-sidebar').html(content);
-            $('.category-link').parent().removeClass('active');
-            $(`.category-link[data-category="${category}"]`).parent().addClass('active');
-        }
+         function updateSidebar(category) {
+             const content = sidebarContent[category] || '';
+             $('.main-sidebar').html(content);
+             $('.category-link').parent().removeClass('active');
+             $(`.category-link[data-category="${category}"]`).parent().addClass('active');
+         }
 
-        $('.category-link').on('click', function() {
-            const selectedCategory = $(this).data('category');
-            localStorage.setItem('selectedCategory', selectedCategory);
-            updateSidebar(selectedCategory);
-        });
+         $('.category-link').on('click', function() {
+             const selectedCategory = $(this).data('category');
+             localStorage.setItem('selectedCategory', selectedCategory);
+             updateSidebar(selectedCategory);
+         });
 
-        const storedCategory = localStorage.getItem('selectedCategory') || 'pharmacy';
-        updateSidebar(storedCategory);
-    });
-</script>
+         const storedCategory = localStorage.getItem('selectedCategory') || 'pharmacy';
+         updateSidebar(storedCategory);
+     });
+ </script>

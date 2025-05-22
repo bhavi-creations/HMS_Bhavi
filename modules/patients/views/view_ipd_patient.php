@@ -46,8 +46,8 @@
                                     </div>
                                     <div class="col-md-6">
                                         <p><strong>Admission Date:</strong> <?php echo htmlspecialchars($patient['admission_date']); ?></p>
-                                        <p><strong>Ward Number:</strong> <?php echo htmlspecialchars($patient['ward_number']); ?></p>
-                                        <p><strong>Bed Number:</strong> <?php echo htmlspecialchars($patient['bed_number']); ?></p>
+                                        <p><strong>Ward Number:</strong> <?php echo htmlspecialchars($patient['ward_id']); ?></p>
+                                        <p><strong>Bed Number:</strong> <?php echo htmlspecialchars($patient['bed_id']); ?></p>
                                         <p><strong>Fee:</strong> ₹<?php echo htmlspecialchars(number_format($patient['fee'], 2)); ?></p>
                                         <p><strong>Discount:</strong> <?php echo htmlspecialchars($patient['discount']); ?>%</p>
                                         <p><strong>Final Fee:</strong> ₹<?php echo htmlspecialchars(number_format($patient['final_fee'], 2)); ?></p>

@@ -43,8 +43,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $admission_date_date = $_POST['admission_date'];
     $admission_date_time = $_POST['admission_time'];
     $admission_date = date('Y-m-d H:i:s', strtotime("$admission_date_date $admission_date_time"));
-    $ward_number = filter_var($_POST['ward_number'], FILTER_SANITIZE_STRING);
-    $bed_number = filter_var($_POST['bed_number'], FILTER_SANITIZE_STRING);
+    $ward_id = filter_var($_POST['ward_id'], FILTER_SANITIZE_STRING);
+    $bed_id = filter_var($_POST['bed_id'], FILTER_SANITIZE_STRING);
     $fee = filter_var($_POST['fee'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
     $discount = filter_var($_POST['discount'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
     $final_fee = filter_var($_POST['final_fee'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
@@ -121,8 +121,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             referred_by = :referred_by,
             remarks = :remarks,
             admission_date = :admission_date,
-            ward_number = :ward_number,
-            bed_number = :bed_number,
+            ward_id = :ward_id,
+            bed_id = :bed_id,
             fee = :fee,
             discount = :discount,
             final_fee = :final_fee,
@@ -145,8 +145,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ':referred_by' => $referred_by,
             ':remarks' => $remarks,
             ':admission_date' => $admission_date,
-            ':ward_number' => $ward_number,
-            ':bed_number' => $bed_number,
+            ':ward_id' => $ward_id,
+            ':bed_id' => $bed_id,
             ':fee' => $fee,
             ':discount' => $discount,
             ':final_fee' => $final_fee,
@@ -258,12 +258,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <input type="time" class="form-control" id="admission_time" name="admission_time" value="<?php echo isset($patient['admission_date']) ? htmlspecialchars(date('H:i', strtotime($patient['admission_date']))) : ''; ?>" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="ward_number" class="form-label">Ward Number</label>
-                                    <input type="text" class="form-control" id="ward_number" name="ward_number" value="<?php echo htmlspecialchars($patient['ward_number']); ?>">
+                                    <label for="ward_id" class="form-label">Ward Number</label>
+                                    <input type="text" class="form-control" id="ward_id" name="ward_id" value="<?php echo htmlspecialchars($patient['ward_id']); ?>">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="bed_number" class="form-label">Bed Number</label>
-                                    <input type="text" class="form-control" id="bed_number" name="bed_number" value="<?php echo htmlspecialchars($patient['bed_number']); ?>">
+                                    <label for="bed_id" class="form-label">Bed Number</label>
+                                    <input type="text" class="form-control" id="bed_id" name="bed_id" value="<?php echo htmlspecialchars($patient['bed_id']); ?>">
                                 </div>
                                 <div class="mb-3">
                                     <label for="fee" class="form-label">Fee</label>

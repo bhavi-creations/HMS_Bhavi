@@ -53,8 +53,8 @@
                                 <td><?php echo htmlspecialchars($patient['gender']); ?></td>
                                 <td><?php echo htmlspecialchars($patient['doctor']); ?></td>
                                 <td><?php echo htmlspecialchars($patient['contact']); ?></td>
-                                <td><?php echo htmlspecialchars($patient['ward_number']); ?></td>
-                                <td><?php echo htmlspecialchars($patient['bed_number']); ?></td>
+                                <td><?php echo htmlspecialchars($patient['ward_id']); ?></td>
+                                <td><?php echo htmlspecialchars($patient['bed_id']); ?></td>
                                 <td><?php echo htmlspecialchars($patient['admission_date']); ?></td>
                                 <td><?php echo htmlspecialchars($patient['discharge_date']); ?></td>
                                 <td><?php echo htmlspecialchars($patient['discharge_status']); ?></td>
