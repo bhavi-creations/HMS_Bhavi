@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $fee = filter_var($_POST['fee'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
     $discount = filter_var($_POST['discount'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
     // final_fee is a GENERATED column, DO NOT retrieve or try to insert/update it directly
-    // $final_fee = filter_var($_POST['final_fee'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); 
+    // $final_fee = filter_var($_POST['final_fee'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 
     $ward_id = filter_var($_POST['ward_id'], FILTER_SANITIZE_NUMBER_INT);
     $bed_id = filter_var($_POST['bed_id'], FILTER_SANITIZE_NUMBER_INT);
@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Determine if it's an INSERT or UPDATE for patients_ipd
             if (empty($ipd_id)) { // If ipd_id is not provided, it's a new admission
                 // Generate a unique ipd_id for new records (since it's VARCHAR and not auto-increment)
-                $new_ipd_id = 'IPD_' . uniqid(); 
+                $new_ipd_id = 'IPD_' . uniqid();
                 error_log("Attempting INSERT for new IPD patient with generated ID: " . $new_ipd_id);
 
                 $stmt_insert_patient = $pdo->prepare("INSERT INTO patients_ipd (
@@ -166,14 +166,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 ];
                 error_log("UPDATE params: " . var_export($execute_params, true));
 
-                $stmt_update_patient->execute($execute_params);
-                $rows_affected = $stmt_update_patient->rowCount();
-                if ($rows_affected > 0) {
-                    $success_message = "IPD details updated successfully for IPD ID: " . $ipd_id;
-                    error_log("IPD record updated successfully. Rows affected: " . $rows_affected);
+                $update_success = $stmt_update_patient->execute($execute_params);
+
+                if ($update_success) {
+                    $rows_affected = $stmt_update_patient->rowCount();
+                    error_log("UPDATE successful. Rows affected: " . $rows_affected);
+                    if ($rows_affected > 0) {
+                        $success_message = "IPD details updated successfully for IPD ID: " . $ipd_id;
+                        error_log("Success message set: " . $success_message);
+                    } else {
+                        $success_message = "No changes made to IPD details for ID: " . $ipd_id . ". (Perhaps data was identical)";
+                        error_log("No changes message set: " . $success_message);
+                    }
                 } else {
-                    $success_message = "No changes made to IPD details for ID: " . $ipd_id . ". (Perhaps data was identical)";
-                    error_log("No changes made to IPD details for ID: " . $ipd_id . ". Rows affected: " . $rows_affected);
+                    error_log("UPDATE failed. SQL Error Info: " . var_export($stmt_update_patient->errorInfo(), true));
                 }
             }
 

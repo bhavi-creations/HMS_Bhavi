@@ -5,7 +5,8 @@
 // Include your database connection (assuming $pdo is available)
 // Adjust the path as necessary based on your file structure
 // include "../../../config/config.php"; 
-include __DIR__ . '/../../../config/config.php'; 
+// include _DIR_ . '/../../../config/config.php'; 
+require_once '../../../config/config.php';  
 
 
 header('Content-Type: application/json'); // Respond with JSON

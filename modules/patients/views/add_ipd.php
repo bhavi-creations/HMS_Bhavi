@@ -155,7 +155,7 @@
                                             <div class="col-md-3 mt-5">
                                                 <div class="row last_back_submit d-flex flex-column align-items-center gap-2">
                                                     <div>
-                                                        <a href="patients_ipd_list.php" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Cancel</a>
+                                                        <a href="ipd.php" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Cancel</a>
                                                     </div>
                                                     <div>
                                                         <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Admit Patient</button>
@@ -344,6 +344,8 @@
             </div>
         </div> 
     </div>
-</div>
+</div
+
+<?php include "../../../includes/footer.php"; ?>
 
  

@@ -233,3 +233,8 @@ ob_start(); // Start output buffering
 <?php
 ob_end_flush(); // End output buffering and flush the content
 ?>
+
+
+
+
+<?php include "../../../includes/footer.php"; ?>

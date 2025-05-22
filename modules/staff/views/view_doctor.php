@@ -98,3 +98,7 @@ ob_start(); // Start output buffering
 <?php
 ob_end_flush(); // Flush the output buffer
 ?>
+
+
+
+<?php include "../../../includes/footer.php"; ?>

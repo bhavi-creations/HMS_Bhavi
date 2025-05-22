@@ -322,3 +322,6 @@ ob_start(); // Start output buffering
     </script>
 
 </div>
+
+
+<?php include "../../../includes/footer.php"; ?>

@@ -10,7 +10,8 @@ ini_set('display_errors', 1);
 // *** CRITICAL CHANGE: Include ONLY your database connection file directly. ***
 // *** DO NOT include header.php, as it outputs HTML. ***
 // include "../../../config/config.php"; 
-include __DIR__ . '/../../../config/config.php'; 
+// include _DIR_ . '/../../../config/config.php'; 
+require_once '../../../config/config.php'; // Adjust the path to your database connection file
 
 header('Content-Type: application/json'); // Respond with JSON
 

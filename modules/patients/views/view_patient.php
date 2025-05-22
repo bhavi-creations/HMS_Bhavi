@@ -43,6 +43,7 @@
                                             'Age' => $patient['age'],
                                             'Father/Guardian' => $patient['guardian_name'],
                                             'Gender' => $patient['gender'],
+                                            'Blood Group' => $patient['blood_group'], // Added Blood Group
                                             'Contact' => $patient['contact'],
                                             'Whatsapp' => $patient['whatsapp_number'],
                                             'Address' => $patient['address'],

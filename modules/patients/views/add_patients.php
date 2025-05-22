@@ -5,8 +5,6 @@
     <?php
     include '../../../includes/sidebar.php';
 
-
-
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (isset($_POST['submit_doc_btn'])) {
 
@@ -14,6 +12,7 @@
             $name = filter_var($_POST['name'], FILTER_SANITIZE_STRING);
             $age = filter_var($_POST['age'], FILTER_VALIDATE_INT);
             $gender = filter_var($_POST['gender'], FILTER_SANITIZE_STRING);
+            $blood_group = filter_var($_POST['blood_group'], FILTER_SANITIZE_STRING); // NEW
             $guardian_name = filter_var($_POST['guardian_name'], FILTER_SANITIZE_STRING);
             $contact = filter_var($_POST['contact'], FILTER_SANITIZE_NUMBER_INT);
             $whatsapp_number = filter_var($_POST['whatsapp_number'], FILTER_SANITIZE_NUMBER_INT);
@@ -28,28 +27,27 @@
             $discount = filter_var($_POST['discount'], FILTER_VALIDATE_FLOAT);
             $final_fee = filter_var($_POST['final_fee'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 
-            // Validate the sanitized inputs
-            if (!$name || !$age || !$gender || !$guardian_name || !$contact || !$whatsapp_number || !$address || !$problem || !$doctor || !$referred_by || !$remarks || !$admission_type || !$medical_history || !$fee || !$discount) {
+            if (
+                !$name || !$age || !$gender || !$blood_group || !$guardian_name || !$contact || !$whatsapp_number ||
+                !$address || !$problem || !$doctor || !$referred_by || !$remarks || !$admission_type || !$medical_history || !$fee || !$discount
+            ) {
                 echo '<script>alert("Please fill in all fields correctly.");</script>';
             } else {
                 try {
-                    // Set the "OP" prefix for both types
                     $type_prefix = 'OP';
 
-                    // Fetch the highest ID for Outpatient (OP) type
                     $stmt = $pdo->prepare("SELECT id FROM patients_opd WHERE id LIKE :type_prefix ORDER BY id DESC LIMIT 1");
                     $stmt->execute([':type_prefix' => $type_prefix . '%']);
                     $last_id = $stmt->fetchColumn();
 
                     if ($last_id) {
-                        $last_number = (int)substr($last_id, 8); // Extract the numeric part after the date
-                        $new_number = str_pad($last_number + 1, 6, '0', STR_PAD_LEFT); // 6 digits padding
+                        $last_number = (int)substr($last_id, 8);
+                        $new_number = str_pad($last_number + 1, 6, '0', STR_PAD_LEFT);
                     } else {
-                        $new_number = '000001'; // Start with 000001 if no IDs exist for this type
+                        $new_number = '000001';
                     }
 
-                    // Generate the new ID in format OPyyymmdd###### (e.g., OP240121000001)
-                    $id = $type_prefix . date('ymd') . $new_number; // Combine type prefix, date, and incremented number
+                    $id = $type_prefix . date('ymd') . $new_number;
 
                     // Handle report uploads
                     $reports = [];
@@ -57,30 +55,28 @@
                         $target_dir = "../../../assets/uploads/patient_reports/";
 
                         foreach ($_FILES['reports']['name'] as $index => $filename) {
-                            $filename = basename($filename); // only keep file name
+                            $filename = basename($filename);
                             $target_file = $target_dir . $filename;
 
-                            // Optional: Prevent overwriting by appending timestamp if needed
                             $file_ext = pathinfo($filename, PATHINFO_EXTENSION);
                             $base_name = pathinfo($filename, PATHINFO_FILENAME);
                             $new_filename = $base_name . '_' . time() . '.' . $file_ext;
                             $target_file = $target_dir . $new_filename;
 
                             if (move_uploaded_file($_FILES['reports']['tmp_name'][$index], $target_file)) {
-                                $reports[] = $new_filename;  // Store only file names
+                                $reports[] = $new_filename;
                             }
                         }
                     }
 
-                    $reports_str = implode(',', $reports);  // Save file names only
+                    $reports_str = implode(',', $reports);
 
-
-                    // Insert data into the database
+                    // Insert with blood_group added
                     $stmt = $pdo->prepare(
                         "INSERT INTO patients_opd 
-                        (id, name, age, gender, doctor, guardian_name,  contact, whatsapp_number,  address, problem, referred_by, remarks, admission_type, medical_history, fee, discount, reports) 
+                        (id, name, age, gender, blood_group, doctor, guardian_name, contact, whatsapp_number, address, problem, referred_by, remarks, admission_type, medical_history, fee, discount, reports) 
                         VALUES 
-                        (:id, :name, :age, :gender, :doctor, :guardian_name, :contact, :whatsapp_number, :address, :problem, :referred_by, :remarks, :admission_type, :medical_history, :fee, :discount, :reports)"
+                        (:id, :name, :age, :gender, :blood_group, :doctor, :guardian_name, :contact, :whatsapp_number, :address, :problem, :referred_by, :remarks, :admission_type, :medical_history, :fee, :discount, :reports)"
                     );
 
                     $stmt->execute([
@@ -88,6 +84,7 @@
                         ':name' => $name,
                         ':age' => $age,
                         ':gender' => $gender,
+                        ':blood_group' => $blood_group, // NEW
                         ':doctor' => $doctor,
                         ':guardian_name' => $guardian_name,
                         ':contact' => $contact,
@@ -103,7 +100,6 @@
                         ':reports' => $reports_str
                     ]);
 
-
                     echo '<script>alert("Patient data inserted successfully. Patient ID: ' . $id . '");</script>';
                     header('Location: ' . $_SERVER['PHP_SELF']);
                     exit();
@@ -113,15 +109,10 @@
             }
         }
     }
-
-
-
     ?>
 
     <div id="content-wrapper" class="d-flex flex-column bg-white">
         <?php include '../../../includes/navbar.php'; ?>
-
-
 
         <div id="content">
             <h1 class="text-center"><strong> Add Patient </strong></h1>
@@ -130,6 +121,8 @@
                     <form method="post" enctype="multipart/form-data" onsubmit="return confirmSubmission()">
                         <div class="form-group">
                             <div class="row">
+
+                                <!-- Existing Fields -->
 
                                 <div class="col-md-3 mt-5">
                                     <label class="control-label mb-2 field_txt">Patient Name</label>
@@ -150,6 +143,24 @@
                                         <option value="Other">Other</option>
                                     </select>
                                 </div>
+
+                                <!-- New Blood Group Dropdown -->
+                                <div class="col-md-3 mt-5">
+                                    <label class="control-label mb-2 field_txt">Blood Group</label>
+                                    <select name="blood_group" class="form-control field_input_bg" required>
+                                        <option value="" disabled selected>Select</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                    </select>
+                                </div>
+
+                                <!-- Remaining Fields Continue Below -->
 
                                 <div class="col-md-3 mt-5">
                                     <label class="control-label mb-2 field_txt">Father/Guardian</label>
@@ -221,9 +232,7 @@
 
                                 <div class="col-md-3 mt-5">
                                     <label class="control-label mb-2 field_txt">Final Amount</label>
-
                                     <input type="text" class="form-control field_input_bg" id="final_amount" name="final_fee" readonly>
-
                                 </div>
 
                                 <div class="col-md-3 mt-5">
@@ -254,12 +263,6 @@
         </div>
     </div>
 
-    <!-- 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-    <script>
-        new DataTable('#example');
-        new DataTable('#example1');
-    </script> -->
-
 </div>
+
+<?php include "../../../includes/footer.php"  ?>
